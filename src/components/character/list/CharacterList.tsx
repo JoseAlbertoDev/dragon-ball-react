@@ -8,7 +8,7 @@ import { CharacterDTO } from '../../../domain/character/character.model';
 
 export const CharacterList: FC<TitleProps> = ({ title }) => {
   const { setTitle } = useApp();
-  const { characterList, setCharacter, detailedCharacterList } = useCharacter();
+  const { characterList, setCharacter } = useCharacter();
   const navigate = useNavigate();
 
   const [filter, setFilter] = useState<string>('');
@@ -18,13 +18,8 @@ export const CharacterList: FC<TitleProps> = ({ title }) => {
   }, [title, setTitle]);
 
   const handleCharacterClick = (characterId: number) => {
-    const character = detailedCharacterList.find(
-      (tempCharacter) => tempCharacter.id === characterId
-    );
-    if (character) {
-      setCharacter(character);
-      navigate(`/${characterId}`);
-    }
+    setCharacter(characterId);
+    navigate(`/${characterId}`);
   };
 
   const handleFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {

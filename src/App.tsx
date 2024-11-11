@@ -21,7 +21,7 @@ import { CharacterProvider } from './context/character/CharacterProvider';
  * EXTRA: montar un buscador de personajes ✔️
  * EXTRA2: cachear la data de los personajes ✔️
  *
- * TODO: Cargar correctamente el character en la vista de detalle
+ * TODO: Cargar correctamente el character en la vista de detalle ✔️
  */
 
 const App: FC = () => {

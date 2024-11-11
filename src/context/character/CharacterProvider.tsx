@@ -6,7 +6,7 @@ import { findCharactersByIds } from '../../domain/character/character.repository
 export const CharacterProvider: FC<PropsWithChildren> = ({ children }) => {
   const [characterList, _setCharacterList] = useState<CharacterDTO[]>([]);
   const [detailedCharacterList, setDetailedCharacterList] = useState<DetailedCharacterDTO[]>([]);
-  const [character, setCharacter] = useState<DetailedCharacterDTO | undefined>(undefined);
+  const [character, _setCharacter] = useState<DetailedCharacterDTO | undefined>(undefined);
 
   const setCharacterList = useCallback(
     async (tempCharacterList: CharacterDTO[]) => {
@@ -18,6 +18,15 @@ export const CharacterProvider: FC<PropsWithChildren> = ({ children }) => {
     },
     [setDetailedCharacterList, _setCharacterList]
   );
+
+  const setCharacter = (characterId: number) => {
+    const characterSelected = detailedCharacterList.find(
+      (character) => character.id === characterId
+    );
+    if (characterSelected) {
+      _setCharacter(() => characterSelected);
+    }
+  };
 
   return (
     <CharacterContext.Provider

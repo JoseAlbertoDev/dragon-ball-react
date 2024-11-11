@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useApp } from '../../../context/app/useApp.hook';
 import { TitleProps } from '../../models/props.model';
 import { useCharacter } from '../../../context/character/useCharacter.hook';
@@ -7,7 +7,8 @@ import { ROUTES } from '../../../router/routes';
 
 export const CharacterDetail: FC<TitleProps> = ({ title }) => {
   const { setTitle } = useApp();
-  const { character } = useCharacter();
+  const { character, setCharacter } = useCharacter();
+  const { characterId } = useParams();
   const navigate = useNavigate();
 
   const handleBackClick = () => {
@@ -16,7 +17,11 @@ export const CharacterDetail: FC<TitleProps> = ({ title }) => {
 
   useEffect(() => {
     setTitle(title);
-  }, [title, setTitle]);
+
+    if (!character && characterId) {
+      setCharacter(parseInt(characterId, 10));
+    }
+  }, [title, setTitle, setCharacter, character, characterId]);
 
   if (character) {
     return (

@@ -7,7 +7,7 @@ export interface Context {
   detailedCharacterList: DetailedCharacterDTO[];
   setDetailedCharacterList: (characters: DetailedCharacterDTO[]) => void;
   character?: DetailedCharacterDTO;
-  setCharacter: (character: DetailedCharacterDTO) => void;
+  setCharacter: (characterId: number) => void;
 }
 
 export const CharacterContext = createContext<Context | undefined>(undefined);
