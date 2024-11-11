@@ -17,19 +17,35 @@ export const findAllCharacters: () => Promise<CharacterDTO[]> = async () => {
   return charactesList;
 };
 
-export const findOneCharacters: (characterId: number) => Promise<CharacterDTO | null> = async (
-  characterId
-) => {
-  let charactesList: CharacterDTO | null = null;
+export const findCharactersByIds: (
+  characterIds: number[]
+) => Promise<DetailedCharacterDTO[]> = async (characterIds) => {
+  let characters: DetailedCharacterDTO[] = [];
+  const requests = characterIds.map((id) => findOneCharacter(id));
+  try {
+    const response = await Promise.all(requests);
+    if (response != null) {
+      characters = response as DetailedCharacterDTO[];
+    }
+  } catch (error) {
+    console.error('Error fetching character list by ID', { error });
+  }
+  return characters;
+};
+
+export const findOneCharacter: (
+  characterId: number
+) => Promise<DetailedCharacterDTO | null> = async (characterId) => {
+  let character: DetailedCharacterDTO | null = null;
   try {
     const tmpUrl = Endpoints.character.getOne.replace('{characterId}', characterId.toString(10));
 
     const apiResponse = await restClient.get<DetailedCharacterDTO>(tmpUrl);
     if (apiResponse.data && apiResponse.data) {
-      charactesList = apiResponse.data;
+      character = apiResponse.data;
     }
   } catch (error) {
     console.log('An error ocurred when fetching characters', { error });
   }
-  return charactesList;
+  return character;
 };

@@ -1,42 +1,64 @@
-import { FC, useEffect } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { useApp } from '../../../context/app/useApp.hook';
 import { TitleProps } from '../../models/props.model';
-import { findAllCharacters } from '../../../domain/character/character.repository';
 import { useNavigate } from 'react-router-dom';
+import { useCharacter } from '../../../context/character/useCharacter.hook';
+import { CharacterListElement } from './CharacterListElement';
+import { CharacterDTO } from '../../../domain/character/character.model';
 
 export const CharacterList: FC<TitleProps> = ({ title }) => {
-  const { setTitle, setCharacterList, characterList } = useApp();
+  const { setTitle } = useApp();
+  const { characterList, setCharacter, detailedCharacterList } = useCharacter();
   const navigate = useNavigate();
+
+  const [filter, setFilter] = useState<string>('');
 
   useEffect(() => {
     setTitle(title);
-    const characterRequest = async () => {
-      if (!characterList || !characterList.length) {
-        const charactersListTmp = await findAllCharacters();
-        setCharacterList(charactersListTmp);
-      }
-    };
-
-    characterRequest().catch((error) => console.log(error));
-  }, [title, setTitle, setCharacterList, characterList]);
+  }, [title, setTitle]);
 
   const handleCharacterClick = (characterId: number) => {
-    console.log(characterId);
-
-    navigate(`/${characterId}`);
+    const character = detailedCharacterList.find(
+      (tempCharacter) => tempCharacter.id === characterId
+    );
+    if (character) {
+      setCharacter(character);
+      navigate(`/${characterId}`);
+    }
   };
 
+  const handleFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    const newValue = event?.currentTarget?.value;
+    setFilter(newValue);
+  };
+
+  const filteredCharacters: CharacterDTO[] =
+    filter != ''
+      ? characterList.filter((character) =>
+          character.name.toLowerCase().includes(filter.toLowerCase())
+        )
+      : characterList;
+
   return (
-    <div>
-      Listado{' '}
-      {characterList.map((character) => (
-        <p
-          className="cursor-pointer"
-          onClick={() => handleCharacterClick(character.id)}
-          key={character.id}>
-          {character.id} - {character.name}
-        </p>
-      ))}
+    <div className="flex flex-column">
+      <div className="flex flex-1 justify-content-end p-4 gap-2">
+        <label>Buscador</label>
+        <input type="text" value={filter} onChange={handleFilterChanged}></input>
+      </div>
+      {!filteredCharacters.length ? (
+        <div className="flex flex-1 justify-content-center">
+          <h5>No characters with that name.</h5>;
+        </div>
+      ) : (
+        <div className="flex flex-1 justify-content-evenly">
+          {filteredCharacters.map((character) => (
+            <CharacterListElement
+              key={character.id}
+              onClick={() => handleCharacterClick(character.id)}
+              character={character}></CharacterListElement>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,9 @@
+const baseUrl = 'https://dragonball-api.com';
+
 export const Endpoints = {
   character: {
-    getAll: 'https://dragonball-api.com/api/characters?limit=4',
-    getOne: 'https://dragonball-api.com/api/characters/{characterId}',
+    getAll: `${baseUrl}/api/characters?limit=4`,
+    getOne: `${baseUrl}/api/characters/{characterId}`,
   },
 };
 

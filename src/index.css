@@ -11,6 +11,11 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  scrollbar-color: var(--blue-700) var(--surface-100);
+}
+*::-webkit-scrollbar-thumb {
+  border-radius: 25px;
 }
 
 a {
